@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+<title>Reception Invitation</title>
+<link rel="stylesheet" href="glass.css">
+</head>
+
+<body>
+
+<div class="invite-frame">
+
+  <!-- Overlay -->
+  <div id="overlay">
+    <button id="openBtn">Tap to Open Reception ✨</button>
+  </div>
+
+  <!-- Video -->
+  <video id="video" playsinline muted preload="metadata"
+         poster="assets/reception/bg.jpg">
+    <source src="assets/reception/video.mp4" type="video/mp4">
+  </video>
+
+</div>
+
+<div class="action-bar">
+  <a href="https://maps.google.com" target="_blank">Open Map</a>
+  <a href="#">Add to Calendar</a>
+</div>
+
+<audio id="audio" preload="auto">
+  <source src="assets/reception/music.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+const btn = document.getElementById("openBtn");
+const overlay = document.getElementById("overlay");
+const video = document.getElementById("video");
+const audio = document.getElementById("audio");
+
+btn.addEventListener("click", () => {
+  overlay.style.display = "none";
+  video.muted = false;
+  video.play();
+  audio.play();
+}, { once: true });
+</script>
+
+</body>
+</html>
