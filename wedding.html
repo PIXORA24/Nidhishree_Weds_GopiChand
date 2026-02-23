@@ -1,51 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-<title>Wedding Invitation</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;600&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+
+<meta property="og:title" content="Nidhishree & Gopi Chand Wedding Invitation">
+<meta property="og:description" content="2 April 2026 | 11 AM | Vanitha Achuth Pai Convention Centre ✨">
+<meta property="og:image" content="assets/wedding/thumb.webp">
+<meta property="og:type" content="website">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>Nidhishree & Gopi Chand Wedding</title>
+
 <link rel="stylesheet" href="glass.css">
 </head>
 
 <body>
 
-<div class="invite-frame">
-
-  <!-- Overlay -->
-  <div id="overlay">
-    <button id="openBtn">Tap to Open Wedding ✨</button>
-  </div>
-
-  <!-- Video -->
-  <video id="video" playsinline muted preload="metadata"
-         poster="assets/wedding/bg.jpg">
-    <source src="assets/wedding/video.mp4" type="video/mp4">
-  </video>
-
-</div>
-
-<div class="action-bar">
-  <a href="https://maps.google.com" target="_blank">Open Map</a>
-  <a href="#">Add to Calendar</a>
-</div>
-
-<audio id="audio" preload="auto">
-  <source src="assets/wedding/music.mp3" type="audio/mpeg">
-</audio>
-
 <script>
-const btn = document.getElementById("openBtn");
-const overlay = document.getElementById("overlay");
-const video = document.getElementById("video");
-const audio = document.getElementById("audio");
-
-btn.addEventListener("click", () => {
-  overlay.style.display = "none";
-  video.muted = false;
-  video.play();
-  audio.play();
-}, { once: true });
+window.location.replace("invite.html?event=wedding");
 </script>
 
 </body>
