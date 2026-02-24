@@ -53,13 +53,11 @@ mapBtn.href = data.map;
 let soundOn = true;
 
 /* =========================
-   COUNTDOWN (NOW BELOW BUTTONS)
+   COUNTDOWN (BELOW BUTTON BAND)
    ========================= */
 
 const countdown = document.createElement("div");
 countdown.className = "countdown-ambient";
-
-/* 🔁 INSERT AFTER ACTION BAR (SWAPPED POSITION) */
 actionBar.after(countdown);
 
 const eventTime = new Date(data.startDate).getTime();
@@ -103,40 +101,25 @@ const timer = setInterval(updateCountdown, 1000);
 updateCountdown();
 
 /* =========================
-   CALENDAR DOWNLOAD
+   GOOGLE CALENDAR DIRECT CREATE
    ========================= */
 
 calendarBtn.addEventListener("click", () => {
+
   const start = new Date(data.startDate);
   const end = new Date(start.getTime() + 2 * 60 * 60 * 1000);
 
-  const formatICS = date =>
+  const formatGoogleDate = (date) =>
     date.toISOString().replace(/[-:]/g, "").split(".")[0] + "Z";
 
-  const icsContent = `
-BEGIN:VCALENDAR
-VERSION:2.0
-BEGIN:VEVENT
-SUMMARY:${data.calendarTitle}
-DTSTART:${formatICS(start)}
-DTEND:${formatICS(end)}
-LOCATION:${data.venue}
-DESCRIPTION:${data.title}
-END:VEVENT
-END:VCALENDAR
-  `;
+  const googleUrl =
+    "https://calendar.google.com/calendar/u/0/r/eventedit?" +
+    "text=" + encodeURIComponent(data.calendarTitle) +
+    "&dates=" + formatGoogleDate(start) + "/" + formatGoogleDate(end) +
+    "&details=" + encodeURIComponent(data.title + " at " + data.venue) +
+    "&location=" + encodeURIComponent(data.venue);
 
-  const blob = new Blob([icsContent], {
-    type: "text/calendar;charset=utf-8"
-  });
-
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement("a");
-  link.href = url;
-  link.download = `${data.title}.ics`;
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
+  window.location.href = googleUrl;
 });
 
 /* =========================
