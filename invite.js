@@ -51,7 +51,9 @@ mapBtn.href = data.map;
 
 let soundOn = true;
 
-/* Countdown */
+/* =========================
+   ROYAL TRADITIONAL COUNTDOWN
+   ========================= */
 
 const countdown = document.createElement("div");
 countdown.className = "countdown-ambient";
@@ -69,27 +71,27 @@ function updateCountdown() {
     return;
   }
 
-  const d = Math.floor(diff / (1000 * 60 * 60 * 24));
-  const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
-  const m = Math.floor((diff / (1000 * 60)) % 60);
-  const s = Math.floor((diff / 1000) % 60);
+  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+  const minutes = Math.floor((diff / (1000 * 60)) % 60);
+  const seconds = Math.floor((diff / 1000) % 60);
 
   countdown.innerHTML = `
     <div>
-      <span>${d}</span>
-      <small>DAYS</small>
+      <span>${days}</span>
+      <small>Days</small>
     </div>
     <div>
-      <span>${String(h).padStart(2, "0")}</span>
-      <small>HOURS</small>
+      <span>${String(hours).padStart(2, "0")}</span>
+      <small>Hours</small>
     </div>
     <div>
-      <span>${String(m).padStart(2, "0")}</span>
-      <small>MINUTES</small>
+      <span>${String(minutes).padStart(2, "0")}</span>
+      <small>Minutes</small>
     </div>
     <div>
-      <span>${String(s).padStart(2, "0")}</span>
-      <small>SECONDS</small>
+      <span>${String(seconds).padStart(2, "0")}</span>
+      <small>Seconds</small>
     </div>
   `;
 }
@@ -97,39 +99,46 @@ function updateCountdown() {
 const timer = setInterval(updateCountdown, 1000);
 updateCountdown();
 
-/* Calendar */
+/* =========================
+   CALENDAR DOWNLOAD
+   ========================= */
 
 calendarBtn.addEventListener("click", () => {
   const start = new Date(data.startDate);
   const end = new Date(start.getTime() + 2 * 60 * 60 * 1000);
 
-  const fmt = d =>
-    d.toISOString().replace(/[-:]/g, "").split(".")[0] + "Z";
+  const formatICS = date =>
+    date.toISOString().replace(/[-:]/g, "").split(".")[0] + "Z";
 
-  const ics = `
+  const icsContent = `
 BEGIN:VCALENDAR
 VERSION:2.0
 BEGIN:VEVENT
 SUMMARY:${data.calendarTitle}
-DTSTART:${fmt(start)}
-DTEND:${fmt(end)}
+DTSTART:${formatICS(start)}
+DTEND:${formatICS(end)}
 LOCATION:${data.venue}
 DESCRIPTION:${data.title}
 END:VEVENT
 END:VCALENDAR
-`;
+  `;
 
-  const blob = new Blob([ics], { type: "text/calendar;charset=utf-8" });
+  const blob = new Blob([icsContent], {
+    type: "text/calendar;charset=utf-8"
+  });
+
   const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = `${data.title}.ics`;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = `${data.title}.ics`;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
 });
 
-/* Start */
+/* =========================
+   START INVITE
+   ========================= */
 
 function startInvite() {
   overlay.style.display = "none";
@@ -140,7 +149,9 @@ function startInvite() {
 
 openBtn.addEventListener("click", startInvite, { once: true });
 
-/* Sound Toggle */
+/* =========================
+   SOUND TOGGLE
+   ========================= */
 
 soundToggle.addEventListener("click", () => {
   soundOn = !soundOn;
