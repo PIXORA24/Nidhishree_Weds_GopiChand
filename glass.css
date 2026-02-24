@@ -217,16 +217,17 @@ body::before {
 /* Map + Calendar */
 .action-bar a {
   flex: 1;
-  padding: 12px 0;
-  border-radius: 20px;
+  padding: 10px 0;
+  border-radius: 18px;
   background: transparent;
   border: 1px solid rgba(212,175,55,.45);
   color: #f6e6c2;
   font-family: "Cinzel", serif;
-  font-size: 14px;
-  letter-spacing: 1px;
+  font-size: 12px;          /* reduced */
+  letter-spacing: .5px;     /* reduced */
   text-decoration: none;
   text-align: center;
+  white-space: nowrap;      /* force single line */
   transition: all .25s ease;
 }
 
