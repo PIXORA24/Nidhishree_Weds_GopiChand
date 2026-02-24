@@ -75,13 +75,24 @@ function updateCountdown() {
   const s = Math.floor((diff / 1000) % 60);
 
   countdown.innerHTML = `
-    ${d > 0 ? `${d}d&nbsp;` : ""}
-    ${String(h).padStart(2, "0")} :
-    ${String(m).padStart(2, "0")} :
-    ${String(s).padStart(2, "0")}
+    <div>
+      <span>${d}</span>
+      <small>DAYS</small>
+    </div>
+    <div>
+      <span>${String(h).padStart(2, "0")}</span>
+      <small>HOURS</small>
+    </div>
+    <div>
+      <span>${String(m).padStart(2, "0")}</span>
+      <small>MINUTES</small>
+    </div>
+    <div>
+      <span>${String(s).padStart(2, "0")}</span>
+      <small>SECONDS</small>
+    </div>
   `;
 }
-
 const timer = setInterval(updateCountdown, 1000);
 updateCountdown();
 
