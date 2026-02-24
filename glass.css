@@ -144,13 +144,14 @@ body::before {
 }
 
 /* =========================
-   BAND MOVED TO BUTTONS
+   BUTTON BAND
    ========================= */
 
 .action-bar {
   max-width: 360px;
   margin: 0 auto 28px;
   padding: 14px 0 18px;
+
   border-bottom-left-radius: 20px;
   border-bottom-right-radius: 20px;
 
@@ -161,14 +162,15 @@ body::before {
   );
 
   display: flex;
-  gap: 12px;
+  justify-content: center;  /* CENTER BUTTON GROUP */
+  gap: 16px;
 
   box-shadow:
     0 18px 35px rgba(0,0,0,.6);
 }
 
 /* =========================
-   TIMER NOW SIMPLE
+   TIMER SIMPLE
    ========================= */
 
 .countdown-ambient {
@@ -177,7 +179,6 @@ body::before {
   display: flex;
   justify-content: center;
   gap: 26px;
-
   font-family: "Cinzel", serif;
 }
 
@@ -199,18 +200,18 @@ body::before {
 }
 
 /* =========================
-   BUTTON STYLING (UNCHANGED)
+   BUTTON STYLING (FIXED WIDTH)
    ========================= */
 
 .action-bar a {
-  flex: 1;
-  padding: 8px 0;              /* reduced from 12px */
+  flex: 0 0 115px;      /* FIXED WIDTH */
+  padding: 8px 0;
   border-radius: 18px;
   background: transparent;
   border: 1px solid rgba(212,175,55,.45);
   color: #f6e6c2;
   font-family: "Cinzel", serif;
-  font-size: 11px;             /* slightly smaller */
+  font-size: 11px;
   letter-spacing: .4px;
   text-decoration: none;
   text-align: center;
@@ -219,18 +220,18 @@ body::before {
 }
 
 #soundToggle {
-  flex: 0 0 44px;              /* reduced width */
-  padding: 6px 0;              /* reduced height */
+  flex: 0 0 42px;      /* smaller */
   border-radius: 16px;
   border: 1px solid rgba(212,175,55,.45);
   background: transparent;
   color: #f6e6c2;
-  font-size: 14px;             /* slightly smaller */
+  font-size: 14px;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: all .25s ease;
 }
+
 .action-bar a:hover,
 #soundToggle:hover {
   background: rgba(212,175,55,.08);
