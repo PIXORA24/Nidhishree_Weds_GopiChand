@@ -123,42 +123,14 @@ body::before {
 }
 
 /* =========================
-   SHIMMER
-   ========================= */
-
-.invite-label::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  background: linear-gradient(
-    120deg,
-    transparent 0%,
-    rgba(255,255,255,.25) 48%,
-    rgba(255,255,255,.4) 50%,
-    rgba(255,255,255,.25) 52%,
-    transparent 100%
-  );
-  transform: translateX(-150%);
-  animation: shimmerMove 7s ease-in-out infinite;
-  pointer-events: none;
-  opacity: .5;
-}
-
-@keyframes shimmerMove {
-  0% { transform: translateX(-150%); }
-  45% { transform: translateX(150%); }
-  100% { transform: translateX(150%); }
-}
-
-/* =========================
    INVITE FRAME
    ========================= */
 
 .invite-frame {
   max-width: 360px;
-  margin: 32px auto 10px;
-  border-radius: 20px;
+  margin: 32px auto 0; /* removed gap */
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
   overflow: hidden;
   background: #000;
   box-shadow:
@@ -172,35 +144,46 @@ body::before {
 }
 
 /* =========================
-   MINIMAL COUNTDOWN
+   ATTACHED TIMER BAND
    ========================= */
 
 .countdown-ambient {
-  position: relative;
-  margin: 14px auto 24px;
   max-width: 360px;
-  text-align: center;
+  margin: 0 auto 28px;
+  padding: 14px 0 18px;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+
+  background: linear-gradient(
+    to bottom,
+    rgba(25,10,15,.95),
+    rgba(45,12,20,.98)
+  );
+
+  display: flex;
+  justify-content: center;
+  gap: 26px;
+
   font-family: "Cinzel", serif;
-  font-size: 14px;
-  letter-spacing: 1.5px;
-  color: rgba(246, 230, 194, 0.85);
+  box-shadow:
+    0 18px 35px rgba(0,0,0,.6);
 }
 
 .countdown-ambient div {
-  display: inline-block;
-  margin: 0 10px;
+  text-align: center;
+  min-width: 50px;
 }
 
 .countdown-ambient span {
+  display: block;
   font-size: 18px;
   color: #f6e6c2;
 }
 
 .countdown-ambient small {
-  display: block;
   font-size: 9px;
   letter-spacing: 1px;
-  color: rgba(255,255,255,0.45);
+  color: rgba(255,255,255,.5);
 }
 
 /* =========================
@@ -214,7 +197,6 @@ body::before {
   gap: 12px;
 }
 
-/* Map + Calendar */
 .action-bar a {
   flex: 1;
   padding: 10px 0;
@@ -223,15 +205,14 @@ body::before {
   border: 1px solid rgba(212,175,55,.45);
   color: #f6e6c2;
   font-family: "Cinzel", serif;
-  font-size: 12px;          /* reduced */
-  letter-spacing: .5px;     /* reduced */
+  font-size: 12px;
+  letter-spacing: .5px;
   text-decoration: none;
   text-align: center;
-  white-space: nowrap;      /* force single line */
+  white-space: nowrap;
   transition: all .25s ease;
 }
 
-/* Music Button */
 #soundToggle {
   flex: 0 0 54px;
   border-radius: 16px;
@@ -245,7 +226,6 @@ body::before {
   transition: all .25s ease;
 }
 
-/* Hover */
 .action-bar a:hover,
 #soundToggle:hover {
   background: rgba(212,175,55,.08);
