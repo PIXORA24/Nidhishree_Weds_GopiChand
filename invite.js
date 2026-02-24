@@ -38,6 +38,7 @@ const openBtn = document.getElementById("openBtn");
 const mapBtn = document.getElementById("mapBtn");
 const calendarBtn = document.getElementById("calendarBtn");
 const soundToggle = document.getElementById("soundToggle");
+const actionBar = document.querySelector(".action-bar");
 
 openBtn.textContent = "Tap to Open Invite ✨";
 
@@ -52,12 +53,14 @@ mapBtn.href = data.map;
 let soundOn = true;
 
 /* =========================
-   ROYAL TRADITIONAL COUNTDOWN
+   COUNTDOWN (NOW BELOW BUTTONS)
    ========================= */
 
 const countdown = document.createElement("div");
 countdown.className = "countdown-ambient";
-document.body.appendChild(countdown);
+
+/* 🔁 INSERT AFTER ACTION BAR (SWAPPED POSITION) */
+actionBar.after(countdown);
 
 const eventTime = new Date(data.startDate).getTime();
 
