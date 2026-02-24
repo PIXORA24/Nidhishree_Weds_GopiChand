@@ -9,7 +9,6 @@ const events = {
     startDate: "2026-04-02T11:00:00+05:30",
     venue: "Vanitha Achuth Pai Convention Centre, Konchady, Mangaluru"
   },
-
   sangeet: {
     title: "Sangeet",
     video: "assets/sangeet/video.mp4",
@@ -39,8 +38,6 @@ const mapBtn = document.getElementById("mapBtn");
 const calendarBtn = document.getElementById("calendarBtn");
 const soundToggle = document.getElementById("soundToggle");
 
-openBtn.textContent = "Tap to Open Invite ✨";
-
 video.src = data.video;
 video.poster = data.poster;
 video.muted = true;
@@ -51,14 +48,11 @@ mapBtn.href = data.map;
 
 let soundOn = true;
 
-/* =========================
-   COUNTDOWN (ATTACHED BELOW INVITE)
-   ========================= */
+/* COUNTDOWN */
 
 const countdown = document.createElement("div");
 countdown.className = "countdown-ambient";
 
-/* 🔥 Insert directly after invite frame */
 const inviteFrame = document.querySelector(".invite-frame");
 inviteFrame.after(countdown);
 
@@ -82,19 +76,19 @@ function updateCountdown() {
   countdown.innerHTML = `
     <div>
       <span>${days}</span>
-      <small>Days</small>
+      <small>DAYS</small>
     </div>
     <div>
       <span>${String(hours).padStart(2, "0")}</span>
-      <small>Hours</small>
+      <small>HOURS</small>
     </div>
     <div>
       <span>${String(minutes).padStart(2, "0")}</span>
-      <small>Minutes</small>
+      <small>MINUTES</small>
     </div>
     <div>
       <span>${String(seconds).padStart(2, "0")}</span>
-      <small>Seconds</small>
+      <small>SECONDS</small>
     </div>
   `;
 }
@@ -102,9 +96,7 @@ function updateCountdown() {
 const timer = setInterval(updateCountdown, 1000);
 updateCountdown();
 
-/* =========================
-   CALENDAR DOWNLOAD
-   ========================= */
+/* CALENDAR */
 
 calendarBtn.addEventListener("click", () => {
   const start = new Date(data.startDate);
@@ -124,7 +116,7 @@ LOCATION:${data.venue}
 DESCRIPTION:${data.title}
 END:VEVENT
 END:VCALENDAR
-  `;
+`;
 
   const blob = new Blob([icsContent], {
     type: "text/calendar;charset=utf-8"
@@ -139,9 +131,7 @@ END:VCALENDAR
   document.body.removeChild(link);
 });
 
-/* =========================
-   START INVITE
-   ========================= */
+/* START INVITE */
 
 function startInvite() {
   overlay.style.display = "none";
@@ -152,9 +142,7 @@ function startInvite() {
 
 openBtn.addEventListener("click", startInvite, { once: true });
 
-/* =========================
-   SOUND TOGGLE
-   ========================= */
+/* SOUND TOGGLE */
 
 soundToggle.addEventListener("click", () => {
   soundOn = !soundOn;
