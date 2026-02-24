@@ -52,12 +52,15 @@ mapBtn.href = data.map;
 let soundOn = true;
 
 /* =========================
-   ROYAL TRADITIONAL COUNTDOWN
+   COUNTDOWN (ATTACHED BELOW INVITE)
    ========================= */
 
 const countdown = document.createElement("div");
 countdown.className = "countdown-ambient";
-document.body.appendChild(countdown);
+
+/* 🔥 Insert directly after invite frame */
+const inviteFrame = document.querySelector(".invite-frame");
+inviteFrame.after(countdown);
 
 const eventTime = new Date(data.startDate).getTime();
 
