@@ -22,6 +22,18 @@ const events = {
   }
 };
 
+/* =========================
+   PLATFORM DETECTION (FROM OLD PROJECT)
+   ========================= */
+
+const isIOS =
+  /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+  (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+
+/* =========================
+   PARAMS
+   ========================= */
+
 const params = new URLSearchParams(window.location.search);
 const eventKey = params.get("event");
 
@@ -30,6 +42,10 @@ if (!events[eventKey]) {
 }
 
 const data = events[eventKey];
+
+/* =========================
+   ELEMENTS
+   ========================= */
 
 const video = document.getElementById("video");
 const audio = document.getElementById("audio");
@@ -40,7 +56,11 @@ const calendarBtn = document.getElementById("calendarBtn");
 const soundToggle = document.getElementById("soundToggle");
 const actionBar = document.querySelector(".action-bar");
 
-openBtn.textContent = "Tap to Open Invite ✨";
+/* =========================
+   SET CONTENT
+   ========================= */
+
+openBtn.textContent = `Tap to Open ${data.title} ✨`;
 
 video.src = data.video;
 video.poster = data.poster;
@@ -53,7 +73,7 @@ mapBtn.href = data.map;
 let soundOn = true;
 
 /* =========================
-   COUNTDOWN (BELOW BUTTON BAND)
+   COUNTDOWN (BELOW BUTTONS)
    ========================= */
 
 const countdown = document.createElement("div");
@@ -78,22 +98,10 @@ function updateCountdown() {
   const seconds = Math.floor((diff / 1000) % 60);
 
   countdown.innerHTML = `
-    <div>
-      <span>${days}</span>
-      <small>Days</small>
-    </div>
-    <div>
-      <span>${String(hours).padStart(2, "0")}</span>
-      <small>Hours</small>
-    </div>
-    <div>
-      <span>${String(minutes).padStart(2, "0")}</span>
-      <small>Minutes</small>
-    </div>
-    <div>
-      <span>${String(seconds).padStart(2, "0")}</span>
-      <small>Seconds</small>
-    </div>
+    <div><span>${days}</span><small>Days</small></div>
+    <div><span>${String(hours).padStart(2,"0")}</span><small>Hours</small></div>
+    <div><span>${String(minutes).padStart(2,"0")}</span><small>Minutes</small></div>
+    <div><span>${String(seconds).padStart(2,"0")}</span><small>Seconds</small></div>
   `;
 }
 
@@ -101,7 +109,7 @@ const timer = setInterval(updateCountdown, 1000);
 updateCountdown();
 
 /* =========================
-   GOOGLE CALENDAR DIRECT CREATE
+   GOOGLE CALENDAR DIRECT
    ========================= */
 
 calendarBtn.addEventListener("click", () => {
@@ -133,7 +141,15 @@ function startInvite() {
   audio.play().catch(() => {});
 }
 
-openBtn.addEventListener("click", startInvite, { once: true });
+/* iOS → requires tap */
+/* Android → auto play */
+
+if (isIOS) {
+  openBtn.addEventListener("click", startInvite, { once: true });
+} else {
+  overlay.style.display = "none";
+  setTimeout(startInvite, 300);
+}
 
 /* =========================
    SOUND TOGGLE
