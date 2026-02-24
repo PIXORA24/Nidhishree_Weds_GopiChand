@@ -204,20 +204,18 @@ body::before {
 }
 
 /* =========================
-   MINIMAL ACTION BAR
+   PERFECTLY ALIGNED ACTION BAR
    ========================= */
 
 .action-bar {
-  position: relative;
   max-width: 360px;
   margin: 0 auto 50px;
-  padding: 0 16px;
   display: flex;
-  gap: 14px;
+  gap: 12px;
 }
 
-.action-bar a,
-.action-bar button {
+/* Map + Calendar */
+.action-bar a {
   flex: 1;
   padding: 12px 0;
   border-radius: 20px;
@@ -228,21 +226,29 @@ body::before {
   font-size: 14px;
   letter-spacing: 1px;
   text-decoration: none;
-  cursor: pointer;
+  text-align: center;
   transition: all .25s ease;
 }
 
-.action-bar a:hover,
-.action-bar button:hover {
-  background: rgba(212,175,55,.08);
-  box-shadow: 0 0 12px rgba(212,175,55,.25);
+/* Music Button */
+#soundToggle {
+  flex: 0 0 54px;
+  border-radius: 16px;
+  border: 1px solid rgba(212,175,55,.45);
+  background: transparent;
+  color: #f6e6c2;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all .25s ease;
 }
 
-/* Smaller music button */
-
-#soundToggle {
-  flex: 0.5;
-  font-size: 16px;
+/* Hover */
+.action-bar a:hover,
+#soundToggle:hover {
+  background: rgba(212,175,55,.08);
+  box-shadow: 0 0 12px rgba(212,175,55,.25);
 }
 
 /* =========================
