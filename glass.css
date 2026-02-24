@@ -204,9 +204,9 @@ body::before {
 
 .action-bar a {
   flex: 1;
-  padding: 10px 0;
-  border-radius: 18px;
-  background: transparent;
+  padding: 12px 0;
+  border-radius: 12px; /* reduced from 18px */
+  background: rgba(0,0,0,.25);
   border: 1px solid rgba(212,175,55,.45);
   color: #f6e6c2;
   font-family: "Cinzel", serif;
@@ -220,9 +220,9 @@ body::before {
 
 #soundToggle {
   flex: 0 0 54px;
-  border-radius: 16px;
+  border-radius: 12px; /* reduced */
   border: 1px solid rgba(212,175,55,.45);
-  background: transparent;
+  background: rgba(0,0,0,.25);
   color: #f6e6c2;
   font-size: 16px;
   display: flex;
