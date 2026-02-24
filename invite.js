@@ -39,7 +39,7 @@ const mapBtn = document.getElementById("mapBtn");
 const calendarBtn = document.getElementById("calendarBtn");
 const soundToggle = document.getElementById("soundToggle");
 
-openBtn.textContent = `Tap to Open ${data.title} ✨`;
+openBtn.textContent = "Tap to Open Invite ✨";
 
 video.src = data.video;
 video.poster = data.poster;
