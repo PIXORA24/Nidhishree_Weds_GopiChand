@@ -87,26 +87,20 @@ body::before {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-
   width: 58%;
   padding: 18px 0;
-
   border-radius: 24px;
-
   background: linear-gradient(
     to bottom,
     rgba(0,0,0,.55),
     rgba(0,0,0,.35)
   );
-
   backdrop-filter: blur(22px);
   -webkit-backdrop-filter: blur(22px);
-
   font-family: "Cinzel", serif;
   font-size: 24px;
   letter-spacing: 1.2px;
   text-align: center;
-
   background-image: linear-gradient(
     135deg,
     #f6e6c2,
@@ -116,28 +110,20 @@ body::before {
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-
   text-shadow: 0 2px 12px rgba(0,0,0,.7);
-
-  box-shadow:
-    0 25px 45px rgba(0,0,0,.65);
-
+  box-shadow: 0 25px 45px rgba(0,0,0,.65);
   overflow: hidden;
 }
-
-/* =========================
-   🔥 ONLY WEDDING TEXT COLOR CHANGE
-   ========================= */
 
 .wedding-label {
   background-image: none !important;
   -webkit-background-clip: unset !important;
   background-clip: unset !important;
-  color: #7a0f1d !important; /* Royal Maroon */
+  color: #7a0f1d !important;
 }
 
 /* =========================
-   SHIMMER – CONTROLLED
+   SHIMMER
    ========================= */
 
 .invite-label::before {
@@ -145,7 +131,6 @@ body::before {
   position: absolute;
   inset: 0;
   border-radius: inherit;
-
   background: linear-gradient(
     120deg,
     transparent 0%,
@@ -154,7 +139,6 @@ body::before {
     rgba(255,255,255,.25) 52%,
     transparent 100%
   );
-
   transform: translateX(-150%);
   animation: shimmerMove 7s ease-in-out infinite;
   pointer-events: none;
@@ -168,7 +152,7 @@ body::before {
 }
 
 /* =========================
-   INVITE FRAME (VIDEO PAGE)
+   INVITE FRAME
    ========================= */
 
 .invite-frame {
@@ -222,7 +206,7 @@ body::before {
 }
 
 /* =========================
-   ACTION BAR
+   PREMIUM ACTION BAR
    ========================= */
 
 .action-bar {
@@ -230,9 +214,9 @@ body::before {
   left: 0;
   right: 0;
   bottom: 0;
-  padding: 16px 20px;
+  padding: 18px 22px;
   display: flex;
-  gap: 12px;
+  gap: 14px;
   background: linear-gradient(
     to top,
     rgba(18,7,11,.95),
@@ -245,29 +229,73 @@ body::before {
 .action-bar button {
   flex: 1;
   padding: 14px 0;
-  border-radius: 999px;
-  background: rgba(255,255,255,.12);
-  border: 1px solid rgba(255,255,255,.25);
-  color: #fff;
+  border-radius: 30px;
+  background: linear-gradient(
+    to bottom,
+    rgba(255,255,255,.12),
+    rgba(255,255,255,.05)
+  );
+  border: 1px solid rgba(212,175,55,.45);
+  color: #f6e6c2;
+  font-family: "Cinzel", serif;
   font-size: 14px;
+  letter-spacing: 1px;
   text-decoration: none;
   cursor: pointer;
+  backdrop-filter: blur(14px);
+  box-shadow:
+    0 12px 25px rgba(0,0,0,.6),
+    inset 0 1px 0 rgba(255,255,255,.15);
+  transition: all .3s ease;
+}
+
+.action-bar a:hover,
+.action-bar button:hover {
+  transform: translateY(-3px);
+  box-shadow:
+    0 18px 35px rgba(0,0,0,.8),
+    0 0 0 1px rgba(212,175,55,.6);
 }
 
 /* =========================
-   COUNTDOWN
+   ROYAL TRADITIONAL COUNTDOWN
    ========================= */
 
 .countdown-ambient {
   position: fixed;
-  bottom: 96px;
+  bottom: 125px;
   left: 50%;
   transform: translateX(-50%);
-  font-family: "Orbitron", monospace;
-  font-size: 26px;
-  letter-spacing: 3px;
-  color: rgba(255,255,255,.35);
-  text-shadow: 0 2px 12px rgba(0,0,0,.8);
-  pointer-events: none;
-  z-index: 1;
+  display: flex;
+  gap: 22px;
+  padding: 16px 26px;
+  border-radius: 28px;
+  background: linear-gradient(
+    to bottom,
+    rgba(255,255,255,.08),
+    rgba(255,255,255,.04)
+  );
+  backdrop-filter: blur(14px);
+  font-family: "Cinzel", serif;
+  box-shadow:
+    0 18px 40px rgba(0,0,0,.6),
+    inset 0 1px 0 rgba(255,255,255,.15);
+}
+
+.countdown-ambient div {
+  text-align: center;
+  min-width: 55px;
+}
+
+.countdown-ambient span {
+  display: block;
+  font-size: 24px;
+  color: #f6e6c2;
+  letter-spacing: 1px;
+}
+
+.countdown-ambient small {
+  font-size: 12px;
+  color: rgba(255,255,255,.6);
+  letter-spacing: 1px;
 }
