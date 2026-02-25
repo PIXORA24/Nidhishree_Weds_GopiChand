@@ -23,12 +23,14 @@ const events = {
 };
 
 /* =========================
-   PLATFORM DETECTION (FROM OLD PROJECT)
+   PLATFORM DETECTION
    ========================= */
 
 const isIOS =
   /iPad|iPhone|iPod/.test(navigator.userAgent) ||
   (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+
+const isAndroid = /Android/.test(navigator.userAgent);
 
 /* =========================
    PARAMS
@@ -73,7 +75,7 @@ mapBtn.href = data.map;
 let soundOn = true;
 
 /* =========================
-   COUNTDOWN (BELOW BUTTONS)
+   COUNTDOWN
    ========================= */
 
 const countdown = document.createElement("div");
@@ -109,7 +111,7 @@ const timer = setInterval(updateCountdown, 1000);
 updateCountdown();
 
 /* =========================
-   GOOGLE CALENDAR DIRECT
+   GOOGLE CALENDAR (APP FIRST, FALLBACK WEB)
    ========================= */
 
 calendarBtn.addEventListener("click", () => {
@@ -120,14 +122,50 @@ calendarBtn.addEventListener("click", () => {
   const formatGoogleDate = (date) =>
     date.toISOString().replace(/[-:]/g, "").split(".")[0] + "Z";
 
-  const googleUrl =
+  const dates = formatGoogleDate(start) + "/" + formatGoogleDate(end);
+
+  const webUrl =
     "https://calendar.google.com/calendar/u/0/r/eventedit?" +
     "text=" + encodeURIComponent(data.calendarTitle) +
-    "&dates=" + formatGoogleDate(start) + "/" + formatGoogleDate(end) +
+    "&dates=" + dates +
     "&details=" + encodeURIComponent(data.title + " at " + data.venue) +
     "&location=" + encodeURIComponent(data.venue);
 
-  window.location.href = googleUrl;
+  const iosAppUrl =
+    "comgooglecalendar://?action=TEMPLATE" +
+    "&text=" + encodeURIComponent(data.calendarTitle) +
+    "&dates=" + dates +
+    "&details=" + encodeURIComponent(data.title + " at " + data.venue) +
+    "&location=" + encodeURIComponent(data.venue);
+
+  const androidIntentUrl =
+    "intent://calendar.google.com/calendar/r/eventedit?" +
+    "text=" + encodeURIComponent(data.calendarTitle) +
+    "&dates=" + dates +
+    "&details=" + encodeURIComponent(data.title + " at " + data.venue) +
+    "&location=" + encodeURIComponent(data.venue) +
+    "#Intent;scheme=https;package=com.google.android.calendar;end";
+
+  if (isIOS) {
+
+    // Try open app
+    window.location.href = iosAppUrl;
+
+    // Fallback to web
+    setTimeout(() => {
+      window.location.href = webUrl;
+    }, 1200);
+
+  } else if (isAndroid) {
+
+    window.location.href = androidIntentUrl;
+
+  } else {
+
+    window.location.href = webUrl;
+
+  }
+
 });
 
 /* =========================
@@ -141,8 +179,8 @@ function startInvite() {
   audio.play().catch(() => {});
 }
 
-/* iOS → requires tap */
-/* Android → auto play */
+/* iOS requires tap */
+/* Android auto play */
 
 if (isIOS) {
   openBtn.addEventListener("click", startInvite, { once: true });
