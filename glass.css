@@ -316,3 +316,16 @@ body::before {
   letter-spacing: .6px;
   cursor: pointer;
 }
+
+#navDim {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0);
+  pointer-events: none;
+  z-index: 9999;
+  transition: background 0.4s ease;
+}
+
+#navDim.active {
+  background: rgba(0, 0, 0, 0.6);
+}
