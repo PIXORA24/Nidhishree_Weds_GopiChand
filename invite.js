@@ -30,8 +30,6 @@ const isIOS =
   /iPad|iPhone|iPod/.test(navigator.userAgent) ||
   (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
 
-const isAndroid = /Android/.test(navigator.userAgent);
-
 /* =========================
    PARAMS
    ========================= */
@@ -111,7 +109,7 @@ const timer = setInterval(updateCountdown, 1000);
 updateCountdown();
 
 /* =========================
-   GOOGLE CALENDAR (APP FIRST, FALLBACK WEB)
+   GOOGLE CALENDAR (CORRECT TEMPLATE LINK)
    ========================= */
 
 calendarBtn.addEventListener("click", () => {
@@ -122,50 +120,14 @@ calendarBtn.addEventListener("click", () => {
   const formatGoogleDate = (date) =>
     date.toISOString().replace(/[-:]/g, "").split(".")[0] + "Z";
 
-  const dates = formatGoogleDate(start) + "/" + formatGoogleDate(end);
-
-  const webUrl =
-    "https://calendar.google.com/calendar/u/0/r/eventedit?" +
-    "text=" + encodeURIComponent(data.calendarTitle) +
-    "&dates=" + dates +
-    "&details=" + encodeURIComponent(data.title + " at " + data.venue) +
-    "&location=" + encodeURIComponent(data.venue);
-
-  const iosAppUrl =
-    "comgooglecalendar://?action=TEMPLATE" +
+  const googleUrl =
+    "https://calendar.google.com/calendar/render?action=TEMPLATE" +
     "&text=" + encodeURIComponent(data.calendarTitle) +
-    "&dates=" + dates +
+    "&dates=" + formatGoogleDate(start) + "/" + formatGoogleDate(end) +
     "&details=" + encodeURIComponent(data.title + " at " + data.venue) +
     "&location=" + encodeURIComponent(data.venue);
 
-  const androidIntentUrl =
-    "intent://calendar.google.com/calendar/r/eventedit?" +
-    "text=" + encodeURIComponent(data.calendarTitle) +
-    "&dates=" + dates +
-    "&details=" + encodeURIComponent(data.title + " at " + data.venue) +
-    "&location=" + encodeURIComponent(data.venue) +
-    "#Intent;scheme=https;package=com.google.android.calendar;end";
-
-  if (isIOS) {
-
-    // Try open app
-    window.location.href = iosAppUrl;
-
-    // Fallback to web
-    setTimeout(() => {
-      window.location.href = webUrl;
-    }, 1200);
-
-  } else if (isAndroid) {
-
-    window.location.href = androidIntentUrl;
-
-  } else {
-
-    window.location.href = webUrl;
-
-  }
-
+  window.location.href = googleUrl;
 });
 
 /* =========================
