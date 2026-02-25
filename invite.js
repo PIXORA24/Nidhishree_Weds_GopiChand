@@ -7,7 +7,9 @@ const events = {
     map: "https://maps.app.goo.gl/DAjFK9mZemfoM4b2A",
     calendarTitle: "Nidhishree & Gopi Chand Wedding",
     startDate: "2026-04-02T11:00:00+05:30",
-    venue: "Vanitha Achuth Pai Convention Centre, Konchady, Mangaluru"
+    venue: "Vanitha Achuth Pai Convention Centre, Konchady, Mangaluru",
+    lat: "12.908887",
+    lng: "74.866511"
   },
 
   sangeet: {
@@ -18,7 +20,9 @@ const events = {
     map: "https://maps.app.goo.gl/p8KNRLoWdHNpgYwCA",
     calendarTitle: "Nidhishree & Gopi Chand Sangeet",
     startDate: "2026-03-29T18:30:00+05:30",
-    venue: "Near Kadri Park, Vasanth Vihar, Mangaluru"
+    venue: "Near Kadri Park, Vasanth Vihar, Mangaluru",
+    lat: "12.888451",
+    lng: "74.853508"
   }
 };
 
