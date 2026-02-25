@@ -99,7 +99,7 @@ if (isIOS) {
 
 let soundOn = true;
 let fadeInterval = null;
-let navigating = false;
+let navigatingAway = false;
 
 /* =========================
    FADE FUNCTIONS
@@ -121,7 +121,7 @@ function fadeOutAudio(callback) {
 }
 
 function fadeInAudio() {
-  if (!soundOn || navigating) return;
+  if (!soundOn || navigatingAway) return;
 
   clearInterval(fadeInterval);
 
@@ -139,11 +139,11 @@ function fadeInAudio() {
 }
 
 /* =========================
-   NAVIGATION HANDLER
+   NAVIGATION
 ========================= */
 
 function navigateWithFade(url) {
-  navigating = true;
+  navigatingAway = true;
   navDim.classList.add("active");
 
   if (!soundOn) {
@@ -156,14 +156,10 @@ function navigateWithFade(url) {
   });
 }
 
-/* MAP */
-
 mapBtn.addEventListener("click", (e) => {
   e.preventDefault();
   navigateWithFade(mapBtn.href);
 });
-
-/* CALENDAR */
 
 calendarBtn.addEventListener("click", (e) => {
   e.preventDefault();
@@ -255,19 +251,21 @@ soundToggle.addEventListener("click", () => {
 });
 
 /* =========================
-   RESUME WHEN RETURNING
+   VISIBILITY CONTROL (FINAL FIX)
 ========================= */
 
 document.addEventListener("visibilitychange", () => {
-  if (!document.hidden) {
-    navigating = false;
-    if (soundOn) fadeInAudio();
-    navDim.classList.remove("active");
+  if (document.hidden) {
+    audio.pause();
   }
 });
 
-window.addEventListener("pageshow", () => {
-  navigating = false;
-  if (soundOn) fadeInAudio();
-  navDim.classList.remove("active");
+/* Resume ONLY when real focus returns */
+
+window.addEventListener("focus", () => {
+  if (navigatingAway) {
+    navigatingAway = false;
+    navDim.classList.remove("active");
+    if (soundOn) fadeInAudio();
+  }
 });
