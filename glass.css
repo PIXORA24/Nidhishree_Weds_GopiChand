@@ -151,7 +151,6 @@ body::before {
   max-width: 360px;
   margin: 0 auto 28px;
   padding: 14px 0 18px;
-
   border-bottom-left-radius: 20px;
   border-bottom-right-radius: 20px;
 
@@ -162,11 +161,96 @@ body::before {
   );
 
   display: flex;
-  justify-content: center;  /* CENTER BUTTON GROUP */
+  justify-content: center;
   gap: 16px;
 
   box-shadow:
     0 18px 35px rgba(0,0,0,.6);
+}
+
+/* =========================
+   BUTTON STYLING ENHANCED
+   ========================= */
+
+.action-bar a,
+#soundToggle {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.action-bar a {
+  flex: 0 0 115px;
+  padding: 8px 0;
+  border-radius: 18px;
+  background: rgba(0,0,0,0.25);
+  border: 1px solid rgba(212,175,55,.5);
+  color: #f6e6c2;
+  font-family: "Cinzel", serif;
+  font-size: 11px;
+  letter-spacing: .4px;
+  text-decoration: none;
+  text-align: center;
+  white-space: nowrap;
+  position: relative;
+  overflow: hidden;
+  transition: all .3s ease;
+
+  box-shadow:
+    inset 0 0 8px rgba(212,175,55,0.08),
+    0 0 10px rgba(212,175,55,0.08);
+}
+
+/* Light sweep */
+
+.action-bar a::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -120%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(
+    120deg,
+    transparent,
+    rgba(255,255,255,0.35),
+    transparent
+  );
+  transform: skewX(-25deg);
+  animation: sweepLoop 6s ease-in-out infinite;
+}
+
+@keyframes sweepLoop {
+  0% { left: -120%; }
+  20% { left: 140%; }
+  100% { left: 140%; }
+}
+
+/* Press feedback */
+
+.action-bar a:active,
+#soundToggle:active {
+  transform: scale(0.95);
+  box-shadow: 0 0 10px rgba(212,175,55,.5);
+}
+
+/* Sound Button */
+
+#soundToggle {
+  flex: 0 0 42px;
+  border-radius: 16px;
+  border: 1px solid rgba(212,175,55,.5);
+  background: rgba(0,0,0,0.25);
+  color: #f6e6c2;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all .3s ease;
+
+  box-shadow:
+    inset 0 0 6px rgba(212,175,55,0.08),
+    0 0 8px rgba(212,175,55,0.08);
 }
 
 /* =========================
@@ -197,45 +281,6 @@ body::before {
   font-size: 9px;
   letter-spacing: 1px;
   color: rgba(255,255,255,.5);
-}
-
-/* =========================
-   BUTTON STYLING (FIXED WIDTH)
-   ========================= */
-
-.action-bar a {
-  flex: 0 0 115px;      /* FIXED WIDTH */
-  padding: 8px 0;
-  border-radius: 18px;
-  background: transparent;
-  border: 1px solid rgba(212,175,55,.45);
-  color: #f6e6c2;
-  font-family: "Cinzel", serif;
-  font-size: 11px;
-  letter-spacing: .4px;
-  text-decoration: none;
-  text-align: center;
-  white-space: nowrap;
-  transition: all .25s ease;
-}
-
-#soundToggle {
-  flex: 0 0 42px;      /* smaller */
-  border-radius: 16px;
-  border: 1px solid rgba(212,175,55,.45);
-  background: transparent;
-  color: #f6e6c2;
-  font-size: 14px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all .25s ease;
-}
-
-.action-bar a:hover,
-#soundToggle:hover {
-  background: rgba(212,175,55,.08);
-  box-shadow: 0 0 12px rgba(212,175,55,.25);
 }
 
 /* =========================
