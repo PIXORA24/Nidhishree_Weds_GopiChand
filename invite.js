@@ -25,6 +25,14 @@ const events = {
 };
 
 /* =========================
+   PLATFORM DETECTION
+========================= */
+
+const isIOS =
+  /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+  (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+
+/* =========================
    PARAMS
 ========================= */
 
@@ -84,7 +92,7 @@ let fadeInterval = null;
 let navigatingAway = false;
 
 /* =========================
-   FADE FUNCTIONS
+   FADE HELPERS
 ========================= */
 
 function stopFade() {
@@ -111,16 +119,17 @@ function fadeInAudio() {
   stopFade();
 
   audio.volume = 0;
-  audio.play().catch(() => {});
 
-  fadeInterval = setInterval(() => {
-    if (audio.volume < 0.95) {
-      audio.volume += 0.05;
-    } else {
-      audio.volume = 1;
-      stopFade();
-    }
-  }, 40);
+  audio.play().then(() => {
+    fadeInterval = setInterval(() => {
+      if (audio.volume < 0.95) {
+        audio.volume += 0.05;
+      } else {
+        audio.volume = 1;
+        stopFade();
+      }
+    }, 40);
+  }).catch(() => {});
 }
 
 /* =========================
@@ -131,11 +140,8 @@ function navigateWithFade(url) {
   navigatingAway = true;
   navDim.classList.add("active");
 
-  if (soundOn) {
-    fadeOutAudio();
-  }
+  if (soundOn) fadeOutAudio();
 
-  // short delay so fade visually triggers
   setTimeout(() => {
     window.location.href = url;
   }, 150);
@@ -209,10 +215,15 @@ function startInvite() {
   overlay.style.display = "none";
   video.muted = false;
   video.play().catch(() => {});
-  fadeInAudio();
+
+  // iOS-safe direct user gesture unlock
+  audio.volume = 0;
+  audio.play().then(() => {
+    fadeInAudio();
+  }).catch(() => {});
 }
 
-if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
+if (isIOS) {
   openBtn.addEventListener("click", startInvite, { once: true });
 } else {
   overlay.style.display = "none";
@@ -246,7 +257,7 @@ document.addEventListener("visibilitychange", () => {
 });
 
 /* =========================
-   BFCache + RETURN FIX
+   RETURN HANDLING (BFCache SAFE)
 ========================= */
 
 window.addEventListener("pageshow", (event) => {
