@@ -78,13 +78,26 @@ audio.src = data.audio;
 ========================= */
 
 if (isIOS) {
-  mapBtn.href =
-    "https://maps.apple.com/?address=" +
-    encodeURIComponent(data.venue);
-} else {
-  mapBtn.href = data.map;
-}
 
+  // Apple Maps — exact pin
+  mapBtn.href =
+    "https://maps.apple.com/?ll=" +
+    data.lat +
+    "," +
+    data.lng +
+    "&q=" +
+    encodeURIComponent(data.venue);
+
+} else {
+
+  // Google Maps — exact pin
+  mapBtn.href =
+    "https://www.google.com/maps/dir/?api=1&destination=" +
+    data.lat +
+    "," +
+    data.lng;
+
+}
 /* =========================
    SOUND STATE
 ========================= */
