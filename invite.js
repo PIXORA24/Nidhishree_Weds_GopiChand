@@ -4,7 +4,6 @@ const events = {
     video: "assets/wedding/video.mp4",
     audio: "assets/wedding/music.mp3",
     poster: "assets/wedding/bg.webp",
-    map: "https://maps.app.goo.gl/DAjFK9mZemfoM4b2A",
     calendarTitle: "Nidhishree & Gopi Chand Wedding",
     startDate: "2026-04-02T11:00:00+05:30",
     venue: "Vanitha Achuth Pai Convention Centre, Konchady, Mangaluru",
@@ -17,7 +16,6 @@ const events = {
     video: "assets/sangeet/video.mp4",
     audio: "assets/sangeet/music.mp3",
     poster: "assets/sangeet/bg.webp",
-    map: "https://maps.app.goo.gl/p8KNRLoWdHNpgYwCA",
     calendarTitle: "Nidhishree & Gopi Chand Sangeet",
     startDate: "2026-03-29T18:30:00+05:30",
     venue: "Near Kadri Park, Vasanth Vihar, Mangaluru",
@@ -72,14 +70,13 @@ video.muted = true;
 video.playsInline = true;
 
 audio.src = data.audio;
+audio.volume = 1;
 
 /* =========================
-   MAP HANDLING
+   MAP HANDLING (COORDINATES)
 ========================= */
 
 if (isIOS) {
-
-  // Apple Maps — exact pin
   mapBtn.href =
     "https://maps.apple.com/?ll=" +
     data.lat +
@@ -87,22 +84,84 @@ if (isIOS) {
     data.lng +
     "&q=" +
     encodeURIComponent(data.venue);
-
 } else {
-
-  // Google Maps — exact pin
   mapBtn.href =
     "https://www.google.com/maps/dir/?api=1&destination=" +
     data.lat +
     "," +
     data.lng;
-
 }
+
 /* =========================
    SOUND STATE
 ========================= */
 
 let soundOn = true;
+let fadeInterval = null;
+
+/* =========================
+   FADE FUNCTIONS
+========================= */
+
+function fadeOutAudio(callback) {
+  clearInterval(fadeInterval);
+
+  fadeInterval = setInterval(() => {
+    if (audio.volume > 0.05) {
+      audio.volume -= 0.05;
+    } else {
+      audio.volume = 0;
+      audio.pause();
+      clearInterval(fadeInterval);
+      if (callback) callback();
+    }
+  }, 40);
+}
+
+function fadeInAudio() {
+  clearInterval(fadeInterval);
+
+  audio.volume = 0;
+  audio.play().catch(() => {});
+
+  fadeInterval = setInterval(() => {
+    if (audio.volume < 0.95) {
+      audio.volume += 0.05;
+    } else {
+      audio.volume = 1;
+      clearInterval(fadeInterval);
+    }
+  }, 40);
+}
+
+/* =========================
+   INSTANT FADE BEFORE NAV
+========================= */
+
+mapBtn.addEventListener("click", () => {
+  if (soundOn) fadeOutAudio();
+});
+
+calendarBtn.addEventListener("click", () => {
+  if (soundOn) fadeOutAudio();
+
+  const start = new Date(data.startDate);
+  const end = new Date(start.getTime() + 2 * 60 * 60 * 1000);
+
+  const formatGoogleDate = (date) =>
+    date.toISOString().replace(/[-:]/g, "").split(".")[0] + "Z";
+
+  const googleUrl =
+    "https://calendar.google.com/calendar/render?action=TEMPLATE" +
+    "&text=" + encodeURIComponent(data.calendarTitle) +
+    "&dates=" + formatGoogleDate(start) + "/" + formatGoogleDate(end) +
+    "&details=" + encodeURIComponent(data.title + " at " + data.venue) +
+    "&location=" + encodeURIComponent(data.venue);
+
+  setTimeout(() => {
+    window.location.href = googleUrl;
+  }, 300);
+});
 
 /* =========================
    COUNTDOWN
@@ -141,28 +200,6 @@ const timer = setInterval(updateCountdown, 1000);
 updateCountdown();
 
 /* =========================
-   GOOGLE CALENDAR TEMPLATE
-========================= */
-
-calendarBtn.addEventListener("click", () => {
-
-  const start = new Date(data.startDate);
-  const end = new Date(start.getTime() + 2 * 60 * 60 * 1000);
-
-  const formatGoogleDate = (date) =>
-    date.toISOString().replace(/[-:]/g, "").split(".")[0] + "Z";
-
-  const googleUrl =
-    "https://calendar.google.com/calendar/render?action=TEMPLATE" +
-    "&text=" + encodeURIComponent(data.calendarTitle) +
-    "&dates=" + formatGoogleDate(start) + "/" + formatGoogleDate(end) +
-    "&details=" + encodeURIComponent(data.title + " at " + data.venue) +
-    "&location=" + encodeURIComponent(data.venue);
-
-  window.location.href = googleUrl;
-});
-
-/* =========================
    START INVITE
 ========================= */
 
@@ -170,11 +207,8 @@ function startInvite() {
   overlay.style.display = "none";
   video.muted = false;
   video.play().catch(() => {});
-  audio.play().catch(() => {});
+  fadeInAudio();
 }
-
-/* iOS requires tap */
-/* Android auto play */
 
 if (isIOS) {
   openBtn.addEventListener("click", startInvite, { once: true });
@@ -189,25 +223,28 @@ if (isIOS) {
 
 soundToggle.addEventListener("click", () => {
   soundOn = !soundOn;
-  audio.muted = !soundOn;
-  soundToggle.textContent = soundOn ? "🔊" : "🔇";
+
+  if (!soundOn) {
+    fadeOutAudio();
+    soundToggle.textContent = "🔇";
+  } else {
+    fadeInAudio();
+    soundToggle.textContent = "🔊";
+  }
 });
 
 /* =========================
-   AUTO PAUSE / RESUME MUSIC
+   AUTO PAUSE / RESUME
 ========================= */
 
 document.addEventListener("visibilitychange", () => {
   if (document.hidden) {
     audio.pause();
   } else {
-    if (soundOn) {
-      audio.play().catch(() => {});
-    }
+    if (soundOn) fadeInAudio();
   }
 });
 
-/* Extra safety for iOS */
 window.addEventListener("pagehide", () => {
   audio.pause();
 });
