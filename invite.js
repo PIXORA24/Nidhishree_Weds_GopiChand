@@ -73,7 +73,7 @@ audio.src = data.audio;
 audio.volume = 1;
 
 /* =========================
-   MAP HANDLING (COORDINATES)
+   MAP HANDLING
 ========================= */
 
 if (isIOS) {
@@ -98,6 +98,7 @@ if (isIOS) {
 
 let soundOn = true;
 let fadeInterval = null;
+let isNavigatingAway = false;
 
 /* =========================
    FADE FUNCTIONS
@@ -119,6 +120,8 @@ function fadeOutAudio(callback) {
 }
 
 function fadeInAudio() {
+  if (isNavigatingAway) return;
+
   clearInterval(fadeInterval);
 
   audio.volume = 0;
@@ -135,15 +138,21 @@ function fadeInAudio() {
 }
 
 /* =========================
-   INSTANT FADE BEFORE NAV
+   NAVIGATION HANDLERS
 ========================= */
 
 mapBtn.addEventListener("click", () => {
-  if (soundOn) fadeOutAudio();
+  if (soundOn) {
+    isNavigatingAway = true;
+    fadeOutAudio();
+  }
 });
 
 calendarBtn.addEventListener("click", () => {
-  if (soundOn) fadeOutAudio();
+  if (soundOn) {
+    isNavigatingAway = true;
+    fadeOutAudio();
+  }
 
   const start = new Date(data.startDate);
   const end = new Date(start.getTime() + 2 * 60 * 60 * 1000);
@@ -228,20 +237,23 @@ soundToggle.addEventListener("click", () => {
     fadeOutAudio();
     soundToggle.textContent = "🔇";
   } else {
+    isNavigatingAway = false;
     fadeInAudio();
     soundToggle.textContent = "🔊";
   }
 });
 
 /* =========================
-   AUTO PAUSE / RESUME
+   VISIBILITY CONTROL
 ========================= */
 
 document.addEventListener("visibilitychange", () => {
   if (document.hidden) {
     audio.pause();
   } else {
-    if (soundOn) fadeInAudio();
+    if (soundOn && !isNavigatingAway) {
+      fadeInAudio();
+    }
   }
 });
 
