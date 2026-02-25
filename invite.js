@@ -25,14 +25,6 @@ const events = {
 };
 
 /* =========================
-   PLATFORM DETECTION
-========================= */
-
-const isIOS =
-  /iPad|iPhone|iPod/.test(navigator.userAgent) ||
-  (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
-
-/* =========================
    PARAMS
 ========================= */
 
@@ -74,24 +66,14 @@ audio.src = data.audio;
 audio.volume = 1;
 
 /* =========================
-   MAP HANDLING
+   MAP (Google for everyone)
 ========================= */
 
-if (isIOS) {
-  mapBtn.href =
-    "https://maps.apple.com/?ll=" +
-    data.lat +
-    "," +
-    data.lng +
-    "&q=" +
-    encodeURIComponent(data.venue);
-} else {
-  mapBtn.href =
-    "https://www.google.com/maps/dir/?api=1&destination=" +
-    data.lat +
-    "," +
-    data.lng;
-}
+mapBtn.href =
+  "https://www.google.com/maps/dir/?api=1&destination=" +
+  data.lat +
+  "," +
+  data.lng;
 
 /* =========================
    SOUND STATE
@@ -105,7 +87,7 @@ let navigatingAway = false;
    FADE FUNCTIONS
 ========================= */
 
-function fadeOutAudio(callback) {
+function fadeOutAudio() {
   clearInterval(fadeInterval);
 
   fadeInterval = setInterval(() => {
@@ -115,7 +97,6 @@ function fadeOutAudio(callback) {
       audio.volume = 0;
       audio.pause();
       clearInterval(fadeInterval);
-      if (callback) callback();
     }
   }, 40);
 }
@@ -139,21 +120,21 @@ function fadeInAudio() {
 }
 
 /* =========================
-   NAVIGATION
+   NAVIGATION (iOS SAFE)
 ========================= */
 
 function navigateWithFade(url) {
   navigatingAway = true;
   navDim.classList.add("active");
 
-  if (!soundOn) {
-    window.location.href = url;
-    return;
+  if (soundOn) {
+    fadeOutAudio();
   }
 
-  fadeOutAudio(() => {
+  // Immediate redirect (Safari-safe)
+  setTimeout(() => {
     window.location.href = url;
-  });
+  }, 120);
 }
 
 mapBtn.addEventListener("click", (e) => {
@@ -227,7 +208,8 @@ function startInvite() {
   fadeInAudio();
 }
 
-if (isIOS) {
+// iOS requires tap
+if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
   openBtn.addEventListener("click", startInvite, { once: true });
 } else {
   overlay.style.display = "none";
@@ -251,7 +233,7 @@ soundToggle.addEventListener("click", () => {
 });
 
 /* =========================
-   VISIBILITY CONTROL (FINAL FIX)
+   RESUME WHEN RETURNING
 ========================= */
 
 document.addEventListener("visibilitychange", () => {
@@ -259,8 +241,6 @@ document.addEventListener("visibilitychange", () => {
     audio.pause();
   }
 });
-
-/* Resume ONLY when real focus returns */
 
 window.addEventListener("focus", () => {
   if (navigatingAway) {
