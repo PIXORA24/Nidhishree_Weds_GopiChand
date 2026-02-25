@@ -24,7 +24,7 @@ const events = {
 
 /* =========================
    PLATFORM DETECTION
-   ========================= */
+========================= */
 
 const isIOS =
   /iPad|iPhone|iPod/.test(navigator.userAgent) ||
@@ -32,7 +32,7 @@ const isIOS =
 
 /* =========================
    PARAMS
-   ========================= */
+========================= */
 
 const params = new URLSearchParams(window.location.search);
 const eventKey = params.get("event");
@@ -45,7 +45,7 @@ const data = events[eventKey];
 
 /* =========================
    ELEMENTS
-   ========================= */
+========================= */
 
 const video = document.getElementById("video");
 const audio = document.getElementById("audio");
@@ -58,7 +58,7 @@ const actionBar = document.querySelector(".action-bar");
 
 /* =========================
    SET CONTENT
-   ========================= */
+========================= */
 
 openBtn.textContent = `Tap to Open ${data.title} ✨`;
 
@@ -68,13 +68,28 @@ video.muted = true;
 video.playsInline = true;
 
 audio.src = data.audio;
-mapBtn.href = data.map;
+
+/* =========================
+   MAP HANDLING
+========================= */
+
+if (isIOS) {
+  mapBtn.href =
+    "https://maps.apple.com/?address=" +
+    encodeURIComponent(data.venue);
+} else {
+  mapBtn.href = data.map;
+}
+
+/* =========================
+   SOUND STATE
+========================= */
 
 let soundOn = true;
 
 /* =========================
    COUNTDOWN
-   ========================= */
+========================= */
 
 const countdown = document.createElement("div");
 countdown.className = "countdown-ambient";
@@ -109,8 +124,8 @@ const timer = setInterval(updateCountdown, 1000);
 updateCountdown();
 
 /* =========================
-   GOOGLE CALENDAR (CORRECT TEMPLATE LINK)
-   ========================= */
+   GOOGLE CALENDAR TEMPLATE
+========================= */
 
 calendarBtn.addEventListener("click", () => {
 
@@ -132,7 +147,7 @@ calendarBtn.addEventListener("click", () => {
 
 /* =========================
    START INVITE
-   ========================= */
+========================= */
 
 function startInvite() {
   overlay.style.display = "none";
@@ -153,10 +168,29 @@ if (isIOS) {
 
 /* =========================
    SOUND TOGGLE
-   ========================= */
+========================= */
 
 soundToggle.addEventListener("click", () => {
   soundOn = !soundOn;
   audio.muted = !soundOn;
   soundToggle.textContent = soundOn ? "🔊" : "🔇";
+});
+
+/* =========================
+   AUTO PAUSE / RESUME MUSIC
+========================= */
+
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden) {
+    audio.pause();
+  } else {
+    if (soundOn) {
+      audio.play().catch(() => {});
+    }
+  }
+});
+
+/* Extra safety for iOS */
+window.addEventListener("pagehide", () => {
+  audio.pause();
 });
