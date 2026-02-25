@@ -49,6 +49,7 @@ const data = events[eventKey];
    ELEMENTS
 ========================= */
 
+const navDim = document.getElementById("navDim");
 const video = document.getElementById("video");
 const audio = document.getElementById("audio");
 const overlay = document.getElementById("overlay");
@@ -98,6 +99,7 @@ if (isIOS) {
 
 let soundOn = true;
 let fadeInterval = null;
+let navigating = false;
 
 /* =========================
    FADE FUNCTIONS
@@ -119,6 +121,8 @@ function fadeOutAudio(callback) {
 }
 
 function fadeInAudio() {
+  if (!soundOn || navigating) return;
+
   clearInterval(fadeInterval);
 
   audio.volume = 0;
@@ -135,21 +139,31 @@ function fadeInAudio() {
 }
 
 /* =========================
-   NAVIGATION HANDLERS
+   NAVIGATION HANDLER
 ========================= */
 
-mapBtn.addEventListener("click", (e) => {
-  e.preventDefault();
+function navigateWithFade(url) {
+  navigating = true;
+  navDim.classList.add("active");
 
   if (!soundOn) {
-    window.location.href = mapBtn.href;
+    window.location.href = url;
     return;
   }
 
   fadeOutAudio(() => {
-    window.location.href = mapBtn.href;
+    window.location.href = url;
   });
+}
+
+/* MAP */
+
+mapBtn.addEventListener("click", (e) => {
+  e.preventDefault();
+  navigateWithFade(mapBtn.href);
 });
+
+/* CALENDAR */
 
 calendarBtn.addEventListener("click", (e) => {
   e.preventDefault();
@@ -167,14 +181,7 @@ calendarBtn.addEventListener("click", (e) => {
     "&details=" + encodeURIComponent(data.title + " at " + data.venue) +
     "&location=" + encodeURIComponent(data.venue);
 
-  if (!soundOn) {
-    window.location.href = googleUrl;
-    return;
-  }
-
-  fadeOutAudio(() => {
-    window.location.href = googleUrl;
-  });
+  navigateWithFade(googleUrl);
 });
 
 /* =========================
@@ -248,19 +255,19 @@ soundToggle.addEventListener("click", () => {
 });
 
 /* =========================
-   VISIBILITY CONTROL
+   RESUME WHEN RETURNING
 ========================= */
 
 document.addEventListener("visibilitychange", () => {
-  if (document.hidden) {
-    audio.pause();
-  } else {
-    if (soundOn) {
-      fadeInAudio();
-    }
+  if (!document.hidden) {
+    navigating = false;
+    if (soundOn) fadeInAudio();
+    navDim.classList.remove("active");
   }
 });
 
-window.addEventListener("pagehide", () => {
-  audio.pause();
+window.addEventListener("pageshow", () => {
+  navigating = false;
+  if (soundOn) fadeInAudio();
+  navDim.classList.remove("active");
 });
