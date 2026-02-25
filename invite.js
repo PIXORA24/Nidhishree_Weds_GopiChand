@@ -66,7 +66,7 @@ audio.src = data.audio;
 audio.volume = 1;
 
 /* =========================
-   MAP (Google for everyone)
+   GOOGLE MAP (ALL DEVICES)
 ========================= */
 
 mapBtn.href =
@@ -87,8 +87,12 @@ let navigatingAway = false;
    FADE FUNCTIONS
 ========================= */
 
-function fadeOutAudio() {
+function stopFade() {
   clearInterval(fadeInterval);
+}
+
+function fadeOutAudio() {
+  stopFade();
 
   fadeInterval = setInterval(() => {
     if (audio.volume > 0.05) {
@@ -96,7 +100,7 @@ function fadeOutAudio() {
     } else {
       audio.volume = 0;
       audio.pause();
-      clearInterval(fadeInterval);
+      stopFade();
     }
   }, 40);
 }
@@ -104,7 +108,7 @@ function fadeOutAudio() {
 function fadeInAudio() {
   if (!soundOn || navigatingAway) return;
 
-  clearInterval(fadeInterval);
+  stopFade();
 
   audio.volume = 0;
   audio.play().catch(() => {});
@@ -114,13 +118,13 @@ function fadeInAudio() {
       audio.volume += 0.05;
     } else {
       audio.volume = 1;
-      clearInterval(fadeInterval);
+      stopFade();
     }
   }, 40);
 }
 
 /* =========================
-   NAVIGATION (iOS SAFE)
+   NAVIGATION
 ========================= */
 
 function navigateWithFade(url) {
@@ -131,10 +135,10 @@ function navigateWithFade(url) {
     fadeOutAudio();
   }
 
-  // Immediate redirect (Safari-safe)
+  // short delay so fade visually triggers
   setTimeout(() => {
     window.location.href = url;
-  }, 120);
+  }, 150);
 }
 
 mapBtn.addEventListener("click", (e) => {
@@ -208,7 +212,6 @@ function startInvite() {
   fadeInAudio();
 }
 
-// iOS requires tap
 if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
   openBtn.addEventListener("click", startInvite, { once: true });
 } else {
@@ -233,7 +236,7 @@ soundToggle.addEventListener("click", () => {
 });
 
 /* =========================
-   RESUME WHEN RETURNING
+   VISIBILITY CONTROL
 ========================= */
 
 document.addEventListener("visibilitychange", () => {
@@ -242,10 +245,28 @@ document.addEventListener("visibilitychange", () => {
   }
 });
 
+/* =========================
+   BFCache + RETURN FIX
+========================= */
+
+window.addEventListener("pageshow", (event) => {
+  navigatingAway = false;
+  navDim.classList.remove("active");
+
+  if (event.persisted && soundOn) {
+    fadeInAudio();
+  }
+
+  video.play().catch(() => {});
+});
+
 window.addEventListener("focus", () => {
   if (navigatingAway) {
     navigatingAway = false;
     navDim.classList.remove("active");
-    if (soundOn) fadeInAudio();
+
+    if (soundOn) {
+      fadeInAudio();
+    }
   }
 });
