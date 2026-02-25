@@ -98,7 +98,6 @@ if (isIOS) {
 
 let soundOn = true;
 let fadeInterval = null;
-let isNavigatingAway = false;
 
 /* =========================
    FADE FUNCTIONS
@@ -120,8 +119,6 @@ function fadeOutAudio(callback) {
 }
 
 function fadeInAudio() {
-  if (isNavigatingAway) return;
-
   clearInterval(fadeInterval);
 
   audio.volume = 0;
@@ -141,18 +138,21 @@ function fadeInAudio() {
    NAVIGATION HANDLERS
 ========================= */
 
-mapBtn.addEventListener("click", () => {
-  if (soundOn) {
-    isNavigatingAway = true;
-    fadeOutAudio();
+mapBtn.addEventListener("click", (e) => {
+  e.preventDefault();
+
+  if (!soundOn) {
+    window.location.href = mapBtn.href;
+    return;
   }
+
+  fadeOutAudio(() => {
+    window.location.href = mapBtn.href;
+  });
 });
 
-calendarBtn.addEventListener("click", () => {
-  if (soundOn) {
-    isNavigatingAway = true;
-    fadeOutAudio();
-  }
+calendarBtn.addEventListener("click", (e) => {
+  e.preventDefault();
 
   const start = new Date(data.startDate);
   const end = new Date(start.getTime() + 2 * 60 * 60 * 1000);
@@ -167,9 +167,14 @@ calendarBtn.addEventListener("click", () => {
     "&details=" + encodeURIComponent(data.title + " at " + data.venue) +
     "&location=" + encodeURIComponent(data.venue);
 
-  setTimeout(() => {
+  if (!soundOn) {
     window.location.href = googleUrl;
-  }, 300);
+    return;
+  }
+
+  fadeOutAudio(() => {
+    window.location.href = googleUrl;
+  });
 });
 
 /* =========================
@@ -237,7 +242,6 @@ soundToggle.addEventListener("click", () => {
     fadeOutAudio();
     soundToggle.textContent = "🔇";
   } else {
-    isNavigatingAway = false;
     fadeInAudio();
     soundToggle.textContent = "🔊";
   }
@@ -251,7 +255,7 @@ document.addEventListener("visibilitychange", () => {
   if (document.hidden) {
     audio.pause();
   } else {
-    if (soundOn && !isNavigatingAway) {
+    if (soundOn) {
       fadeInAudio();
     }
   }
