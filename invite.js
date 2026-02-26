@@ -16,7 +16,7 @@ const events = {
     video: "assets/sangeet/video.mp4",
     audio: "assets/sangeet/music.mp3",
     poster: "assets/sangeet/bg.webp",
-    calendarTitle: "Nidhishree & Gopi Chand Sangeet",
+    calendarTitle: "Nidhishree's Sangeet",
     startDate: "2026-03-29T18:30:00+05:30",
     venue: "Near Kadri Park, Vasanth Vihar, Mangaluru",
     lat: "12.888451",
