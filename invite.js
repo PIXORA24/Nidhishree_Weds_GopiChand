@@ -32,6 +32,8 @@ const isIOS =
   /iPad|iPhone|iPod/.test(navigator.userAgent) ||
   (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
 
+const isAndroid = /Android/i.test(navigator.userAgent);
+
 /* =========================
    PARAMS
 ========================= */
@@ -117,7 +119,6 @@ function fadeInAudio() {
   if (!soundOn || navigatingAway) return;
 
   stopFade();
-
   audio.volume = 0;
 
   audio.play().then(() => {
@@ -152,6 +153,10 @@ mapBtn.addEventListener("click", (e) => {
   navigateWithFade(mapBtn.href);
 });
 
+/* =========================
+   GOOGLE CALENDAR
+========================= */
+
 calendarBtn.addEventListener("click", (e) => {
   e.preventDefault();
 
@@ -161,14 +166,29 @@ calendarBtn.addEventListener("click", (e) => {
   const formatGoogleDate = (date) =>
     date.toISOString().replace(/[-:]/g, "").split(".")[0] + "Z";
 
-  const googleUrl =
+  const dates =
+    formatGoogleDate(start) + "/" + formatGoogleDate(end);
+
+  const webUrl =
     "https://calendar.google.com/calendar/render?action=TEMPLATE" +
     "&text=" + encodeURIComponent(data.calendarTitle) +
-    "&dates=" + formatGoogleDate(start) + "/" + formatGoogleDate(end) +
+    "&dates=" + dates +
     "&details=" + encodeURIComponent(data.title + " at " + data.venue) +
     "&location=" + encodeURIComponent(data.venue);
 
-  navigateWithFade(googleUrl);
+  if (isAndroid) {
+    const intentUrl =
+      "intent://calendar.google.com/calendar/render?action=TEMPLATE" +
+      "&text=" + encodeURIComponent(data.calendarTitle) +
+      "&dates=" + dates +
+      "&details=" + encodeURIComponent(data.title + " at " + data.venue) +
+      "&location=" + encodeURIComponent(data.venue) +
+      "#Intent;scheme=https;package=com.google.android.calendar;end";
+
+    navigateWithFade(intentUrl);
+  } else {
+    navigateWithFade(webUrl);
+  }
 });
 
 /* =========================
@@ -216,7 +236,6 @@ function startInvite() {
   video.muted = false;
   video.play().catch(() => {});
 
-  // iOS-safe direct user gesture unlock
   audio.volume = 0;
   audio.play().then(() => {
     fadeInAudio();
@@ -257,7 +276,7 @@ document.addEventListener("visibilitychange", () => {
 });
 
 /* =========================
-   RETURN HANDLING (BFCache SAFE)
+   RETURN HANDLING
 ========================= */
 
 window.addEventListener("pageshow", (event) => {
