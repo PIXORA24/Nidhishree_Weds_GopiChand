@@ -76,7 +76,7 @@ audio.src = data.audio;
 audio.volume = 1;
 
 /* =========================
-   GOOGLE MAP (ALL DEVICES)
+   GOOGLE MAP
 ========================= */
 
 mapBtn.href =
@@ -266,17 +266,23 @@ soundToggle.addEventListener("click", () => {
 });
 
 /* =========================
-   VISIBILITY CONTROL
+   VISIBILITY CONTROL (FINAL FIX)
 ========================= */
 
 document.addEventListener("visibilitychange", () => {
   if (document.hidden) {
     audio.pause();
+  } else {
+    if (soundOn && navigatingAway) {
+      navigatingAway = false;
+      navDim.classList.remove("active");
+      fadeInAudio();
+    }
   }
 });
 
 /* =========================
-   RETURN HANDLING
+   BFCache SUPPORT
 ========================= */
 
 window.addEventListener("pageshow", (event) => {
@@ -288,15 +294,4 @@ window.addEventListener("pageshow", (event) => {
   }
 
   video.play().catch(() => {});
-});
-
-window.addEventListener("focus", () => {
-  if (navigatingAway) {
-    navigatingAway = false;
-    navDim.classList.remove("active");
-
-    if (soundOn) {
-      fadeInAudio();
-    }
-  }
 });
