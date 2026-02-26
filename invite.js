@@ -32,8 +32,6 @@ const isIOS =
   /iPad|iPhone|iPod/.test(navigator.userAgent) ||
   (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
 
-const isAndroid = /Android/i.test(navigator.userAgent);
-
 /* =========================
    PARAMS
 ========================= */
@@ -76,7 +74,7 @@ audio.src = data.audio;
 audio.volume = 1;
 
 /* =========================
-   GOOGLE MAP
+   GOOGLE MAP (ALL DEVICES)
 ========================= */
 
 mapBtn.href =
@@ -119,6 +117,7 @@ function fadeInAudio() {
   if (!soundOn || navigatingAway) return;
 
   stopFade();
+
   audio.volume = 0;
 
   audio.play().then(() => {
@@ -153,10 +152,6 @@ mapBtn.addEventListener("click", (e) => {
   navigateWithFade(mapBtn.href);
 });
 
-/* =========================
-   GOOGLE CALENDAR
-========================= */
-
 calendarBtn.addEventListener("click", (e) => {
   e.preventDefault();
 
@@ -166,29 +161,14 @@ calendarBtn.addEventListener("click", (e) => {
   const formatGoogleDate = (date) =>
     date.toISOString().replace(/[-:]/g, "").split(".")[0] + "Z";
 
-  const dates =
-    formatGoogleDate(start) + "/" + formatGoogleDate(end);
-
-  const webUrl =
+  const googleUrl =
     "https://calendar.google.com/calendar/render?action=TEMPLATE" +
     "&text=" + encodeURIComponent(data.calendarTitle) +
-    "&dates=" + dates +
+    "&dates=" + formatGoogleDate(start) + "/" + formatGoogleDate(end) +
     "&details=" + encodeURIComponent(data.title + " at " + data.venue) +
     "&location=" + encodeURIComponent(data.venue);
 
-  if (isAndroid) {
-    const intentUrl =
-      "intent://calendar.google.com/calendar/render?action=TEMPLATE" +
-      "&text=" + encodeURIComponent(data.calendarTitle) +
-      "&dates=" + dates +
-      "&details=" + encodeURIComponent(data.title + " at " + data.venue) +
-      "&location=" + encodeURIComponent(data.venue) +
-      "#Intent;scheme=https;package=com.google.android.calendar;end";
-
-    navigateWithFade(intentUrl);
-  } else {
-    navigateWithFade(webUrl);
-  }
+  navigateWithFade(googleUrl);
 });
 
 /* =========================
@@ -236,6 +216,7 @@ function startInvite() {
   video.muted = false;
   video.play().catch(() => {});
 
+  // iOS-safe direct user gesture unlock
   audio.volume = 0;
   audio.play().then(() => {
     fadeInAudio();
@@ -266,23 +247,17 @@ soundToggle.addEventListener("click", () => {
 });
 
 /* =========================
-   VISIBILITY CONTROL (FINAL FIX)
+   VISIBILITY CONTROL
 ========================= */
 
 document.addEventListener("visibilitychange", () => {
   if (document.hidden) {
     audio.pause();
-  } else {
-    if (soundOn && navigatingAway) {
-      navigatingAway = false;
-      navDim.classList.remove("active");
-      fadeInAudio();
-    }
   }
 });
 
 /* =========================
-   BFCache SUPPORT
+   RETURN HANDLING (BFCache SAFE)
 ========================= */
 
 window.addEventListener("pageshow", (event) => {
@@ -294,4 +269,15 @@ window.addEventListener("pageshow", (event) => {
   }
 
   video.play().catch(() => {});
+});
+
+window.addEventListener("focus", () => {
+  if (navigatingAway) {
+    navigatingAway = false;
+    navDim.classList.remove("active");
+
+    if (soundOn) {
+      fadeInAudio();
+    }
+  }
 });
