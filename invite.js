@@ -56,7 +56,6 @@ const overlay = document.getElementById("overlay");
 const openBtn = document.getElementById("openBtn");
 const mapBtn = document.getElementById("mapBtn");
 const calendarBtn = document.getElementById("calendarBtn");
-const soundToggle = document.getElementById("soundToggle");
 const actionBar = document.querySelector(".action-bar");
 
 /* =========================
@@ -230,21 +229,6 @@ if (isIOS) {
   setTimeout(startInvite, 300);
 }
 
-/* =========================
-   SOUND TOGGLE
-========================= */
-
-soundToggle.addEventListener("click", () => {
-  soundOn = !soundOn;
-
-  if (!soundOn) {
-    fadeOutAudio();
-    soundToggle.textContent = "🔇";
-  } else {
-    fadeInAudio();
-    soundToggle.textContent = "🔊";
-  }
-});
 
 /* =========================
    VISIBILITY CONTROL
