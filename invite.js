@@ -62,7 +62,7 @@ const actionBar = document.querySelector(".action-bar");
    SET CONTENT
 ========================= */
 
-openBtn.textContent = `Tap to Open ${data.title} ✨`;
+openBtn.textContent = `Tap to Open ${data.title} Invite✨`;
 
 video.src = data.video;
 video.poster = data.poster;
