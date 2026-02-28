@@ -77,6 +77,7 @@ video.addEventListener("ended", () => {
 
 audio.src = data.audio;
 audio.volume = 1;
+audio.loop = true;
 
 /* =========================
    GOOGLE MAP (ALL DEVICES)
