@@ -231,8 +231,18 @@ function startInvite() {
 if (isIOS) {
   openBtn.addEventListener("click", startInvite, { once: true });
 } else {
+  // Try autoplay
   overlay.style.display = "none";
-  setTimeout(startInvite, 300);
+
+  startInvite();
+
+  // If autoplay fails, bring overlay back
+  setTimeout(() => {
+    if (video.paused) {
+      overlay.style.display = "flex";
+      openBtn.addEventListener("click", startInvite, { once: true });
+    }
+  }, 600);
 }
 
 
