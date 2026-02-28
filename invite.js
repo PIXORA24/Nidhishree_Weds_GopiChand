@@ -68,6 +68,12 @@ video.src = data.video;
 video.poster = data.poster;
 video.muted = true;
 video.playsInline = true;
+video.loop = true;   // force loop at runtime
+
+video.addEventListener("ended", () => {
+  video.currentTime = 0;
+  video.play().catch(() => {});
+});
 
 audio.src = data.audio;
 audio.volume = 1;
